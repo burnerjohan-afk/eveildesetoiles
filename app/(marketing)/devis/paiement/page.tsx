@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Star } from "@/components/ui/Stars";
@@ -11,7 +12,6 @@ export default function PaiementPage() {
   const searchParams = useSearchParams();
   const [mounted, setMounted] = useState(false);
   const [formation, setFormation] = useState<any>(null);
-  const [selectedSession, setSelectedSession] = useState<FormationSession | null>(null);
   const [loading, setLoading] = useState(false);
 
   const type = searchParams.get("type") || "";
@@ -111,11 +111,7 @@ export default function PaiementPage() {
               .map((session: FormationSession) => (
                 <div
                   key={session.id}
-                  className={`p-4 border-2 rounded-lg transition-all duration-300 ${
-                    selectedSession?.id === session.id
-                      ? "border-etoile-500 bg-etoile-50 shadow-lg"
-                      : "border-gray-200 hover:border-etoile-300 hover:shadow-md"
-                  }`}
+                  className="p-4 border-2 border-gray-200 rounded-lg transition-all duration-300 hover:border-etoile-300 hover:shadow-md"
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex-1">

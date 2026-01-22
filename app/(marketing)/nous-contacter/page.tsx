@@ -10,7 +10,6 @@ import Link from "next/link";
 
 function NousContacterForm() {
   const searchParams = useSearchParams();
-  const [mounted, setMounted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
@@ -27,8 +26,6 @@ function NousContacterForm() {
   });
 
   useEffect(() => {
-    setMounted(true);
-    
     // Charger les données
     const loadData = async () => {
       try {

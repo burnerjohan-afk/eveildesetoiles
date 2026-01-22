@@ -1,4 +1,5 @@
 import { getServices, getDefaultServices } from "@/lib/content";
+import type { Service } from "@/lib/storage";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import Link from "next/link";
@@ -14,7 +15,7 @@ export const metadata: Metadata = generatePageMetadata(
 export default async function PrestationsPage() {
   const services = await getServices();
   const defaultServices = getDefaultServices();
-  const displayServices = services.length > 0 ? services : defaultServices;
+  const displayServices: Service[] = services.length > 0 ? services : defaultServices;
 
   // Prestations fixes selon le document
   const prestationsFixes = [

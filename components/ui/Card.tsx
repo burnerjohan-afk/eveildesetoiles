@@ -8,9 +8,10 @@ interface CardProps {
   title?: string;
   animated?: boolean;
   index?: number;
+  style?: React.CSSProperties;
 }
 
-export function Card({ children, className = "", title, animated = false, index = 0 }: CardProps) {
+export function Card({ children, className = "", title, animated = false, index = 0, style }: CardProps) {
   const isFlex = className.includes('flex flex-col');
   
   return (
@@ -24,7 +25,7 @@ export function Card({ children, className = "", title, animated = false, index 
         ${animated ? 'opacity-0 animate-fade-in-up' : ''}
         ${className}
       `}
-      style={animated ? { animationDelay: `${index * 0.1}s` } : {}}
+      style={style || (animated ? { animationDelay: `${index * 0.1}s` } : {})}
     >
       {title && (
         <h3 className="text-xl font-semibold mb-4 text-gray-900 relative z-10">

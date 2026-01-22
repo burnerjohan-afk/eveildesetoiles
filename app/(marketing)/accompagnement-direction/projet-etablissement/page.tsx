@@ -3,7 +3,6 @@ import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { generatePageMetadata } from "@/lib/seo";
 import type { Metadata } from "next";
-import { config } from "@/lib/config";
 import { Star } from "@/components/ui/Stars";
 
 export const metadata: Metadata = generatePageMetadata(

@@ -1,15 +1,10 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
-import { Star } from "@/components/ui/Stars";
 import Link from "next/link";
 
 export default function ConfirmationPage() {
-  const searchParams = useSearchParams();
-  const formationId = searchParams.get("formationId");
-  const sessionId = searchParams.get("sessionId");
 
   return (
     <div className="py-16 bg-gradient-to-b from-white via-etoile-50/20 to-white">

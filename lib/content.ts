@@ -13,11 +13,17 @@ import {
 
 /**
  * Récupère un contenu marketing (toujours depuis fichiers statiques, non modifiable)
+ * Convertit les tableaux readonly en tableaux mutables pour éviter les erreurs TypeScript
  */
 export async function getMarketingContent<T extends keyof typeof marketingContent>(
   key: T
-): Promise<typeof marketingContent[T]> {
-  return marketingContent[key];
+): Promise<any> {
+  const value = marketingContent[key];
+  // Si c'est un tableau, retourner une copie mutable
+  if (Array.isArray(value)) {
+    return [...value];
+  }
+  return value;
 }
 
 /**
@@ -139,13 +145,15 @@ export async function getFormationBySlug(slug: string): Promise<Formation | null
 
 /**
  * Récupère la FAQ (toujours depuis fichiers statiques, non modifiable)
+ * Retourne une copie mutable pour éviter les erreurs TypeScript
  */
 export async function getFAQ() {
-  return defaultFAQ;
+  return [...defaultFAQ];
 }
 
 /**
  * Récupère le contenu "À propos" (toujours depuis fichiers statiques, non modifiable)
+ * Retourne un tableau mutable pour values
  */
 export async function getAboutContent() {
   return {
@@ -156,7 +164,7 @@ export async function getAboutContent() {
       "Accompagnement bienveillant des équipes",
       "Approche personnalisée et adaptée",
       "Éthique professionnelle et déontologie",
-    ],
+    ] as string[],
     author: "Laetitia CHIN",
   };
 }
@@ -172,14 +180,51 @@ export async function getSiteContent(key: string, defaultValue: string = ""): Pr
 
 /**
  * Récupère les services par défaut (pour fallback UI)
+ * Retourne une copie mutable avec les propriétés manquantes ajoutées
  */
-export function getDefaultServices() {
-  return defaultServices;
+export function getDefaultServices(): Service[] {
+  return defaultServices.map((s, index) => ({
+    id: `default-${s.slug}`,
+    slug: s.slug,
+    title: s.title,
+    problem: s.problem,
+    bullets: [...s.bullets],
+    benefits: [...s.benefits],
+    modalities: [...s.modalities],
+    pricingNote: s.pricingNote || null,
+    isActive: s.isActive,
+    updatedAt: new Date().toISOString(),
+  }));
 }
 
 /**
  * Récupère les formations par défaut (pour fallback UI)
+ * Retourne une copie mutable avec les propriétés manquantes ajoutées
  */
-export function getDefaultFormations() {
-  return defaultFormations;
+export function getDefaultFormations(): Formation[] {
+  return defaultFormations.map((f) => ({
+    id: `default-${f.slug}`,
+    slug: f.slug,
+    title: f.title,
+    subtitle: f.subtitle || null,
+    category: null,
+    objectives: [...f.objectives],
+    content: [...f.content],
+    contentDetails: null,
+    modalities: [...f.modalities],
+    duration: null,
+    targetAudience: null,
+    pricing: f.pricing || null,
+    pricingEmployer: null,
+    pricingPersonal: null,
+    locations: [...f.locations],
+    sessions: [],
+    inscriptionFormUrl: null,
+    testimonials: null,
+    satisfactionRate: null,
+    participantCount: null,
+    recommendationRate: null,
+    isActive: f.isActive,
+    updatedAt: new Date().toISOString(),
+  }));
 }

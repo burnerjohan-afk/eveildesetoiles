@@ -11,7 +11,7 @@ export const metadata: Metadata = generatePageMetadata(
 export default async function AccompagnementPage() {
   const methodTitle = await getMarketingContent("methodTitle");
   const methodSubtitle = await getMarketingContent("methodSubtitle");
-  const methodSteps = await getMarketingContent("methodSteps");
+  const methodSteps = (await getMarketingContent("methodSteps")) as Array<{ step: string; title: string; description: string }>;
 
   return (
     <div className="py-16">

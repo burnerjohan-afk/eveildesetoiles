@@ -9,7 +9,7 @@ export const metadata: Metadata = generatePageMetadata(
 );
 
 export default async function AboutPage() {
-  const about = await getAboutContent();
+  const about = await getAboutContent() as { story: string; values: string[]; author: string };
 
   return (
     <div className="py-16">

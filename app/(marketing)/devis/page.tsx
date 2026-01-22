@@ -5,9 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Star } from "@/components/ui/Stars";
-import { config } from "@/lib/config";
 import { Formation } from "@/lib/storage";
-import Link from "next/link";
 
 export default function DevisPage() {
   const searchParams = useSearchParams();

@@ -11,8 +11,10 @@ import {
   getServices,
   getDefaultServices,
   getFormations,
+  getDefaultFormations,
   getFAQ,
 } from "@/lib/content";
+import type { Service, Formation } from "@/lib/storage";
 import { generatePageMetadata } from "@/lib/seo";
 import type { Metadata } from "next";
 
@@ -28,22 +30,24 @@ export default async function HomePage() {
   const heroCtaSecondary = await getMarketingContent("heroCtaSecondary");
   const problemTitle = await getMarketingContent("problemTitle");
   const problemSubtitle = await getMarketingContent("problemSubtitle");
-  const problems = await getMarketingContent("problems");
+  const problems = (await getMarketingContent("problems")) as string[];
   const methodTitle = await getMarketingContent("methodTitle");
   const methodSubtitle = await getMarketingContent("methodSubtitle");
-  const methodSteps = await getMarketingContent("methodSteps");
+  const methodSteps = (await getMarketingContent("methodSteps")) as Array<{ step: string; title: string; description: string }>;
   const testimonialsTitle = await getMarketingContent("testimonialsTitle");
-  const testimonials = await getMarketingContent("testimonials");
+  const testimonials = (await getMarketingContent("testimonials")) as Array<{ name: string; role: string; content: string }>;
   const ctaTitle = await getMarketingContent("ctaTitle");
   const ctaSubtitle = await getMarketingContent("ctaSubtitle");
   const ctaButton = await getMarketingContent("ctaButton");
-  const faq = await getFAQ();
+  const faq = (await getFAQ()) as Array<{ question: string; answer: string }>;
 
   const services = await getServices();
   const defaultServices = getDefaultServices();
-  const displayServices = services.length > 0 ? services : defaultServices;
+  const displayServices: Service[] = services.length > 0 ? services : defaultServices;
   
   const formations = await getFormations();
+  const defaultFormations = getDefaultFormations();
+  const displayFormations: Formation[] = formations.length > 0 ? formations : defaultFormations;
   
   // Liste des accompagnements disponibles (basée sur la structure du site)
   const accompagnements = [
@@ -63,7 +67,7 @@ export default async function HomePage() {
         cta={heroCta}
         ctaSecondary={heroCtaSecondary}
         services={displayServices.map(s => ({ id: s.id, title: s.title, slug: s.slug }))}
-        formations={formations.map(f => ({ id: f.id, title: f.title, slug: f.slug }))}
+        formations={displayFormations.map(f => ({ id: f.id, title: f.title, slug: f.slug }))}
         accompagnements={accompagnements}
       />
 
@@ -81,7 +85,7 @@ export default async function HomePage() {
 
       <AccompagnementSection />
 
-      <ServicesPreview services={displayServices} />
+      <ServicesPreview services={displayServices.map(s => ({ slug: s.slug, title: s.title, problem: s.problem }))} />
 
       <Testimonials title={testimonialsTitle} testimonials={testimonials} />
 
@@ -90,7 +94,7 @@ export default async function HomePage() {
         subtitle={ctaSubtitle} 
         buttonText={ctaButton}
         services={displayServices.map(s => ({ id: s.id, title: s.title, slug: s.slug }))}
-        formations={formations.map(f => ({ id: f.id, title: f.title, slug: f.slug }))}
+        formations={displayFormations.map(f => ({ id: f.id, title: f.title, slug: f.slug }))}
         accompagnements={accompagnements}
       />
 

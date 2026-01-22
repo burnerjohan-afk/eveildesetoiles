@@ -1,10 +1,10 @@
 import { getFormations, getDefaultFormations } from "@/lib/content";
+import type { Formation } from "@/lib/storage";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import Link from "next/link";
 import { generatePageMetadata } from "@/lib/seo";
 import type { Metadata } from "next";
-import { config } from "@/lib/config";
 import { Star } from "@/components/ui/Stars";
 
 export const metadata: Metadata = generatePageMetadata(
@@ -15,7 +15,7 @@ export const metadata: Metadata = generatePageMetadata(
 export default async function FormationsPage() {
   const formations = await getFormations();
   const defaultFormations = getDefaultFormations();
-  const displayFormations = formations.length > 0 ? formations : defaultFormations;
+  const displayFormations: Formation[] = formations.length > 0 ? formations : defaultFormations;
 
   return (
     <div className="py-16 bg-gradient-to-b from-white via-etoile-50/20 to-white">
@@ -151,7 +151,7 @@ export default async function FormationsPage() {
                       </Button>
                     </Link>
                     <Link
-                      href={`/devis?type=formation&id=${formation.id}&title=${encodeURIComponent(formation.title)}&pricing=${encodeURIComponent(formation.pricing || "")}&pricingEmployer=${encodeURIComponent(formation.pricingEmployer || "")}&pricingPersonal=${encodeURIComponent(formation.pricingPersonal || "")}`}
+                      href={`/devis?type=formation&id=${formation.slug}&title=${encodeURIComponent(formation.title)}&pricing=${encodeURIComponent(formation.pricing || "")}&pricingEmployer=${encodeURIComponent(formation.pricingEmployer || "")}&pricingPersonal=${encodeURIComponent(formation.pricingPersonal || "")}`}
                     >
                       <Button variant="secondary" className="transform hover:scale-105 transition-transform">
                         Me contacter / Demander un devis

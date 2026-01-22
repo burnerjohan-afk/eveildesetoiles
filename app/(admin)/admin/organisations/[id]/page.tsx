@@ -1,8 +1,6 @@
 import { getSession } from "@/lib/auth";
-import { requireAdmin } from "@/lib/access";
 import { db } from "@/lib/db";
 import { notFound, redirect } from "next/navigation";
-import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import Link from "next/link";
 import { OrganisationDetail } from "@/components/admin/OrganisationDetail";
@@ -23,9 +21,7 @@ export default async function OrganisationDetailPage({
       clientUsers: true,
       missions: {
         include: {
-          formationCatalog: {
-            select: { title: true },
-          },
+          formationCatalog: true,
         },
         orderBy: { createdAt: "desc" },
       },

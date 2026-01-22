@@ -1,5 +1,4 @@
 import { getSession } from "@/lib/auth";
-import { requireAdmin } from "@/lib/access";
 import { db } from "@/lib/db";
 import { notFound, redirect } from "next/navigation";
 import { Card } from "@/components/ui/Card";
