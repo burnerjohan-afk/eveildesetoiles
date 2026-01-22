@@ -5,8 +5,8 @@
 
 import { promises as fs } from "fs";
 import { join } from "path";
-import { generateFileKey } from "./index";
 import type { UploadResult } from "./index";
+import { generateFileKey } from "./utils";
 
 const UPLOADS_DIR = join(process.cwd(), "uploads");
 

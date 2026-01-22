@@ -5,7 +5,7 @@
 
 import { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { config } from "../config";
-import { generateFileKey } from "./index";
+import { generateFileKey } from "./utils";
 import type { UploadResult } from "./index";
 
 const s3Client = new S3Client({
