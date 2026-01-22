@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
 import { requireMissionAccess } from "@/lib/access";
-import { uploadFile, generateFileKey } from "@/lib/storage";
+import { uploadFile, generateFileKey } from "@/lib/storage-files";
 import { db } from "@/lib/db";
 import { createDocumentSchema } from "@/lib/validators";
 import { config } from "@/lib/config";
