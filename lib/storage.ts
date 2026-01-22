@@ -1,3 +1,7 @@
+// Réexporter les fonctions de stockage de fichiers depuis storage/index
+export { uploadFile, downloadFile, deleteFile, generateFileKey } from "./storage/index";
+export type { StorageFile, UploadResult } from "./storage/index";
+
 import { promises as fs } from "fs";
 import { join } from "path";
 

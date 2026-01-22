@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
 import { requireDocumentAccess } from "@/lib/access";
-import { downloadFile } from "@/lib/storage/index";
+import { downloadFile } from "@/lib/storage";
 import { db } from "@/lib/db";
 
 export async function GET(
