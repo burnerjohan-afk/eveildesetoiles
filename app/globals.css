@@ -1,0 +1,355 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  
+  /* Charte graphique - Couleurs principales */
+  --color-eau-50: #e0f7fa;
+  --color-eau-100: #b2ebf2;
+  --color-eau-200: #80deea;
+  --color-eau-300: #4dd0e1;
+  --color-eau-400: #26c6da;
+  --color-eau-500: #00bcd4;
+  --color-eau-600: #00acc1;
+  --color-eau-700: #0097a7;
+  --color-eau-800: #00838f;
+  --color-eau-900: #006064;
+  
+  --color-etoile-50: #fffef0;
+  --color-etoile-100: #fff9c4;
+  --color-etoile-200: #fff59d;
+  --color-etoile-300: #fff176;
+  --color-etoile-400: #ffee58;
+  --color-etoile-500: #ffeb3b;
+  --color-etoile-600: #fdd835;
+  --color-etoile-700: #fbc02d;
+  --color-etoile-800: #f9a825;
+  --color-etoile-900: #f57f17;
+  
+  /* Couleurs sémantiques */
+  --color-primary: var(--color-eau-500);
+  --color-primary-hover: var(--color-eau-600);
+  --color-primary-light: var(--color-eau-50);
+  --color-primary-dark: var(--color-eau-700);
+  
+  --color-secondary: var(--color-etoile-500);
+  --color-secondary-hover: var(--color-etoile-600);
+  --color-secondary-light: var(--color-etoile-50);
+  
+  --color-accent: #ff9800; /* Orange */
+  --color-accent-hover: #f57c00;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Styles pour les listes avec puces arrondies */
+ul.list-disc {
+  list-style: none;
+  padding-left: 0;
+}
+
+ul.list-disc li::before {
+  content: "●";
+  color: var(--color-eau-500);
+  font-weight: bold;
+  display: inline-block;
+  width: 1.2em;
+  margin-right: 0.5em;
+}
+
+@layer components {
+  /* Gradients réutilisables */
+  .gradient-eau {
+    background: linear-gradient(to bottom right, var(--color-eau-50), var(--color-eau-100), var(--color-eau-50));
+  }
+  
+  .gradient-eau-strong {
+    background: linear-gradient(to bottom right, var(--color-eau-500), var(--color-eau-600), var(--color-eau-700));
+    color: white;
+  }
+  
+  .gradient-etoile {
+    background: linear-gradient(to bottom right, var(--color-etoile-100), #ffb84d);
+  }
+  
+  /* Ombres avec couleur eau */
+  .shadow-eau {
+    box-shadow: 0 10px 25px -5px rgba(0, 188, 212, 0.1), 0 4px 6px -2px rgba(0, 188, 212, 0.05);
+  }
+  
+  .shadow-eau-lg {
+    box-shadow: 0 20px 25px -5px rgba(0, 188, 212, 0.1), 0 10px 10px -5px rgba(0, 188, 212, 0.04);
+  }
+  
+  /* Bordures avec couleur eau */
+  .border-eau {
+    border-width: 2px;
+    border-color: rgba(178, 235, 242, 0.5);
+  }
+  
+  /* Hover effects */
+  .hover-eau {
+    transition: background-color 300ms;
+  }
+  
+  .hover-eau:hover {
+    background-color: rgba(224, 247, 250, 0.5);
+  }
+  
+  .hover-eau-text {
+    transition: color 300ms;
+  }
+  
+  .hover-eau-text:hover {
+    color: var(--color-eau-600);
+  }
+  
+  /* Effet shine pour les cartes */
+  .card-shine {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .card-shine::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.4),
+      transparent
+    );
+    transition: left 0.5s;
+  }
+  
+  .card-shine:hover::before {
+    left: 100%;
+  }
+  
+  /* Animation de bordure */
+  .border-animated {
+    position: relative;
+  }
+  
+  .border-animated::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 2px;
+    background: linear-gradient(45deg, #00bcd4, #ffeb3b, #ff9800, #00bcd4);
+    background-size: 300% 300%;
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    animation: border-gradient 3s ease infinite;
+  }
+  
+  @keyframes border-gradient {
+    0%, 100% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+  /* Animations pour rendre le site plus dynamique */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  @keyframes slideInLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  
+  @keyframes slideInRight {
+    from {
+      opacity: 0;
+      transform: translateX(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+  
+  @keyframes pulse-soft {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.7;
+    }
+  }
+  
+  @keyframes shimmer {
+    0% {
+      background-position: -1000px 0;
+    }
+    100% {
+      background-position: 1000px 0;
+    }
+  }
+  
+  @keyframes scale-in {
+    from {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
+  .animate-fade-in-up {
+    animation: fadeInUp 0.6s ease-out forwards;
+  }
+  
+  .animate-fade-in {
+    animation: fadeIn 0.8s ease-out forwards;
+  }
+  
+  .animate-slide-in-left {
+    animation: slideInLeft 0.6s ease-out forwards;
+  }
+  
+  .animate-slide-in-right {
+    animation: slideInRight 0.6s ease-out forwards;
+  }
+  
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+  
+  .animate-pulse-soft {
+    animation: pulse-soft 2s ease-in-out infinite;
+  }
+  
+  .animate-scale-in {
+    animation: scale-in 0.5s ease-out forwards;
+  }
+  
+  /* Délais d'animation pour effet cascade */
+  .delay-100 {
+    animation-delay: 0.1s;
+  }
+  
+  .delay-200 {
+    animation-delay: 0.2s;
+  }
+  
+  .delay-300 {
+    animation-delay: 0.3s;
+  }
+  
+  .delay-400 {
+    animation-delay: 0.4s;
+  }
+  
+  /* Classe utilitaire pour les formes arrondies organiques */
+  .rounded-organic {
+    border-radius: 2.5rem 1rem 2rem 1.5rem;
+  }
+
+  /* Scrollbar personnalisée */
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: #f3f4f6;
+    border-radius: 10px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    transition: background-color 0.2s;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0, 0, 0, 0.3);
+  }
+
+  .scrollbar-thumb-eau-300::-webkit-scrollbar-thumb {
+    background-color: var(--color-eau-300);
+  }
+
+  .scrollbar-thumb-etoile-300::-webkit-scrollbar-thumb {
+    background-color: var(--color-etoile-300);
+  }
+
+  .scrollbar-thumb-orange-300::-webkit-scrollbar-thumb {
+    background-color: #ffb74d;
+  }
+
+  .scrollbar-track-gray-100::-webkit-scrollbar-track {
+    background: #f3f4f6;
+  }
+}

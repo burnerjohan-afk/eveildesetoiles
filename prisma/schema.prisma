@@ -1,0 +1,213 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// AUTHENTIFICATION
+// ============================================
+
+model AdminUser {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
+
+  @@map("admin_users")
+}
+
+model ClientUser {
+  id           String    @id @default(cuid())
+  organisationId String
+  email        String    @unique
+  name         String?
+  createdAt    DateTime  @default(now())
+  lastLoginAt  DateTime?
+
+  organisation Organisation @relation(fields: [organisationId], references: [id], onDelete: Cascade)
+
+  @@map("client_users")
+}
+
+model MagicLinkToken {
+  id         String    @id @default(cuid())
+  email      String
+  tokenHash  String
+  expiresAt  DateTime
+  usedAt     DateTime?
+  createdAt  DateTime  @default(now())
+
+  @@index([email, tokenHash])
+  @@index([expiresAt])
+  @@map("magic_link_tokens")
+}
+
+// ============================================
+// ORGANISATIONS (TENANTS)
+// ============================================
+
+model Organisation {
+  id        String   @id @default(cuid())
+  name      String
+  address   String?
+  opcoInfo  String?  // Informations OPCO
+  createdAt DateTime @default(now())
+
+  // Relations
+  clientUsers ClientUser[]
+  missions    Mission[]
+  personnel   Personnel[]
+  documents   Document[]
+  auditLogs   AuditLog[]
+
+  @@map("organisations")
+}
+
+// ============================================
+// CATALOGUE FORMATIONS
+// ============================================
+
+model FormationCatalog {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  description String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  // Relations
+  missions Mission[]
+
+  @@map("formation_catalog")
+}
+
+// ============================================
+// MISSIONS (FORMATIONS VENDUES)
+// ============================================
+
+model Mission {
+  id              String   @id @default(cuid())
+  organisationId  String
+  formationCatalogId String
+  status          String   @default("PREPARATION") // PREPARATION, IN_PROGRESS, COMPLETED, ARCHIVED
+  startDate       DateTime?
+  endDate         DateTime?
+  lockedAt        DateTime?     // Si clôturé
+  notesAdmin      String?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  // Relations
+  organisation     Organisation         @relation(fields: [organisationId], references: [id], onDelete: Cascade)
+  formationCatalog FormationCatalog    @relation(fields: [formationCatalogId], references: [id], onDelete: Restrict)
+  participants     MissionParticipant[]
+  documents        Document[]
+
+  @@index([organisationId])
+  @@index([formationCatalogId])
+  @@index([status])
+  @@map("missions")
+}
+
+// ============================================
+// PERSONNEL (RÉPERTOIRE ENTREPRISE)
+// ============================================
+
+model Personnel {
+  id            String   @id @default(cuid())
+  organisationId String
+  firstName     String
+  lastName      String
+  position      String?  // Fonction
+  phone         String?
+  email         String?
+  notes         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relations
+  organisation  Organisation          @relation(fields: [organisationId], references: [id], onDelete: Cascade)
+  participations MissionParticipant[]
+
+  @@index([organisationId])
+  @@map("personnel")
+}
+
+// ============================================
+// PARTICIPANTS (AFFECTATION PERSONNEL → MISSION)
+// ============================================
+
+model MissionParticipant {
+  id              String   @id @default(cuid())
+  missionId       String
+  personnelId     String
+  attendanceStatus String?  // Optionnel (ex: "present", "absent", "partial")
+  createdAt       DateTime @default(now())
+
+  // Relations
+  mission   Mission   @relation(fields: [missionId], references: [id], onDelete: Cascade)
+  personnel Personnel @relation(fields: [personnelId], references: [id], onDelete: Cascade)
+
+  @@unique([missionId, personnelId]) // Un personnel ne peut être affecté qu'une fois par mission
+  @@index([missionId])
+  @@index([personnelId])
+  @@map("mission_participants")
+}
+
+// ============================================
+// DOCUMENTS
+// ============================================
+
+model Document {
+  id          String   @id @default(cuid())
+  organisationId String
+  missionId   String   // NON nullable - toujours classé par mission
+  uploadedBy  String   // "ADMIN" ou "CLIENT"
+  category    String   // "REQUESTED", "PROVIDED", "ATTESTATION", "OPCO", "OTHER"
+  title       String
+  fileKey     String            // Clé de stockage (local path ou S3 key)
+  fileName    String            // Nom original du fichier
+  mimeType    String
+  sizeBytes   Int
+  createdAt   DateTime          @default(now())
+
+  // Relations
+  organisation Organisation @relation(fields: [organisationId], references: [id], onDelete: Cascade)
+  mission      Mission      @relation(fields: [missionId], references: [id], onDelete: Cascade)
+
+  @@index([organisationId])
+  @@index([missionId])
+  @@index([category])
+  @@index([uploadedBy])
+  @@map("documents")
+}
+
+// ============================================
+// AUDIT LOG (RGPD - Traçabilité minimale)
+// ============================================
+
+model AuditLog {
+  id           String   @id @default(cuid())
+  organisationId String? // Nullable pour les actions admin globales
+  actorEmail   String
+  actorRole    String   // "ADMIN" ou "CLIENT"
+  action       String    // Ex: "CREATE_MISSION", "UPLOAD_DOCUMENT", "ASSIGN_PERSONNEL"
+  entityType   String    // Ex: "Mission", "Document", "Personnel"
+  entityId     String
+  createdAt    DateTime  @default(now())
+
+  // Relations
+  organisation Organisation? @relation(fields: [organisationId], references: [id], onDelete: SetNull)
+
+  @@index([organisationId])
+  @@index([actorEmail])
+  @@index([entityType, entityId])
+  @@index([createdAt])
+  @@map("audit_logs")
+}
